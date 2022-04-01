@@ -33,14 +33,16 @@ header h1 {
 main {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: flex-start;
     align-content: stretch;
     align-items: flex-start;
 }
 
 .block {
+    order: 0;
     flex: 1 1 auto;
+    align-self: auto;
 }
 
 .tetris-wrap {
@@ -48,6 +50,13 @@ main {
     width: 300px;
     height: 500px;
     margin: 20px auto;
+    overflow: hidden;
+}
+
+#tetris-field {
+    width: 300px;
+    height: 500px;
+    margin: 2px;
 }
 
 .text-field {
@@ -78,4 +87,52 @@ li {
 .score-field {
     font-size: 42px;
     padding: 30px 0;
+}
+
+.white {
+    width: 33px;
+    height: 33px;
+    background: #fff;
+    border-radius: 100%;
+    float: left;
+}
+
+.orange {
+    width: 33px;
+    height: 33px;
+    background: orange;
+    border-radius: 100%;
+    float: left;
+}
+
+.red {
+    width: 33px;
+    height: 33px;
+    background: red;
+    border-radius: 100%;
+    float: left;
+}
+
+.green {
+    width: 33px;
+    height: 33px;
+    background: green;
+    border-radius: 100%;
+    float: left;
+}
+
+.blue {
+    width: 33px;
+    height: 33px;
+    background: blue;
+    border-radius: 100%;
+    float: left;
+}
+
+.indigo {
+    width: 33px;
+    height: 33px;
+    background: indigo;
+    border-radius: 100%;
+    float: left;
 }
