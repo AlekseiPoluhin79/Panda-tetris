@@ -76,9 +76,48 @@ window.onload = function() {
         if (flag) square();
     }
 
+    function tetrisRight() {
+        for (let i = tetris.length - 1; i >= 0; i--) {
+            for (let j = tetris[i].length - 1; j >= 0; j--) {
+                if (tetris[i][j] < 10) {
+                    if (tetris[i][j] != 0 && tetris[i][j + 1] == 0) {
+                        tetris[i][j + 1] = tetris[i][j];
+                        tetris[i][j] = 0;
+                    }
+                }
+            }
+        }
+        draw();
+    }
+
+    function tetrisLeft() {
+        for (let i = tetris.length - 1; i >= 0; i--) {
+            for (let j = 0; j < tetris[i].length; j++) {
+                if (tetris[i][j] < 10) {
+                    if (tetris[i][j] != 0 && tetris[i][j - 1] == 0) {
+                        tetris[i][j - 1] = tetris[i][j];
+                        tetris[i][j] = 0;
+                    }
+                }
+            }
+        }
+        draw();
+    }
+
     init();
     draw();
     square();
 
     document.querySelector('.start').onclick = run;
+    document.onkeydown = function(event) {
+        switch (event.code) {
+            case 'ArrowRight':
+                tetrisRight();
+                break;
+            case 'ArrowLeft':
+                tetrisLeft();
+                break;
+        }
+        return false;
+    };
 };
