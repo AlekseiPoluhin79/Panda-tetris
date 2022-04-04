@@ -52,49 +52,55 @@ window.onload = function() {
             rend = Math.floor(rend);
             return rend;
         }
-        tetris[0][0] = rendomInteger(0, color.length); //присваиваем рендомной цвет шарика массивы color
+        //присваиваем рендомной цвет шарика массивы color
+        tetris[0][0] = rendomInteger(0, color.length);
     }
 
     function run() {
-        draw();
-        flag = true;
-        for (let i = tetris.length - 1; i >= 0; i--) {
-            for (let j = 0; j < tetris[i].length; j++) {
-                if (tetris[i][j] < 10) {
-                    if (tetris[i][j] != 0) {
-                        if (i == tetris.length - 1) {
-                            tetris[i][j] = tetris[i][j] + 10;
-                        } else if (tetris[i + 1][j] == 0) {
-                            tetris[i + 1][j] = tetris[i][j];
-                            tetris[i][j] = 0;
-                            flag = false;
+        timer = setTimeout(function() {
+            if (finish()) return false;
+            draw();
+            flag = true;
+            for (let i = tetris.length - 1; i >= 0; i--) {
+                for (let j = 0; j < tetris[i].length; j++) {
+                    if (tetris[i][j] < 10) {
+                        if (tetris[i][j] != 0) {
+                            if (i == tetris.length - 1) {
+                                tetris[i][j] = tetris[i][j] + 10;
+                            } else if (tetris[i + 1][j] == 0) {
+                                tetris[i + 1][j] = tetris[i][j];
+                                tetris[i][j] = 0;
+                                flag = false;
+                            }
                         }
                     }
                 }
             }
-        }
-        if (flag) square();
+            checkLine();
+            if (flag) square();
+            run(); //рекурсивно вызываем функцию run()
+        }, 200);
     }
 
     function tetrisRight() {
         for (let i = tetris.length - 1; i >= 0; i--) {
             for (let j = tetris[i].length - 1; j >= 0; j--) {
                 if (tetris[i][j] < 10) {
-                    if (tetris[i][j] != 0 && tetris[i][j + 1] == 0) {
+                    if (tetris[i][j] != 0 && tetris[i][j + 1] == 0 && tetris[i + 1][j] == 0) {
                         tetris[i][j + 1] = tetris[i][j];
                         tetris[i][j] = 0;
                     }
                 }
             }
         }
-        draw();
     }
+    draw();
 
     function tetrisLeft() {
         for (let i = tetris.length - 1; i >= 0; i--) {
             for (let j = 0; j < tetris[i].length; j++) {
                 if (tetris[i][j] < 10) {
-                    if (tetris[i][j] != 0 && tetris[i][j - 1] == 0) {
+                    if (tetris[i][j] != 0 && tetris[i][j - 1] == 0 && tetris[i + 1][j] == 0) {
                         tetris[i][j - 1] = tetris[i][j];
                         tetris[i][j] = 0;
                     }
@@ -104,11 +110,58 @@ window.onload = function() {
         draw();
     }
 
-    init();
-    draw();
-    square();
+    function checkLine() {
+        for (let i = tetris.length - 1; i >= 0; i--) {
+            for (let j = 0; j < tetris[i].length; j++) {
+                if (tetris[i][j] > 10 && tetris[i][j + 1] != undefined && tetris[i][j + 2] != undefined) {
+                    if (tetris[i][j] == tetris[i][j + 1] && tetris[i][j] == tetris[i][j + 2]) {
+                        tetris[i][j] = 0;
+                        tetris[i][j + 1] = 0;
+                        tetris[i][j + 2] = 0;
+                        score += 10;
+                        // ниже проверяем ( для этого вводим временную переменную  m )  что у нас лежит в строках выше
+                        for (let m = i; m >= 0; m--) {
+                            if (tetris[m][j] > 10) tetris[m][j] = tetris[m][j] - 10; //проверяем что линия не пустая и не подвижная/и делаем её пустую и подвижную
+                            if (tetris[m][j + 1] > 10) tetris[m][j + 1] = tetris[m][j + 1] - 10; //то же делаем с соседними блоками
+                            if (tetris[m][j + 2] > 10) tetris[m][j + 2] = tetris[m][j + 2] - 10;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-    document.querySelector('.start').onclick = run;
+    //функция завершения игры
+
+    function finish() {
+        let stop = false;
+        for (let i = tetris.length - 1; i >= 0; i--) {
+            for (let j = 0; j < tetris[i].length; j++) {
+                stop = true;
+                for (let k = 0; k < tetris.length; k++) {
+                    if (tetris[k][j] == 0) {
+                        stop = false;
+                        break;
+                    }
+                }
+                if (stop) {
+                    clearTimeout(timer);
+                    alert('Попробуй ещё раз!');
+                    break;
+                }
+            }
+            if (stop) break;
+        }
+        return stop;
+    }
+
+    document.querySelector('.start').onclick = function() {
+        init();
+        draw();
+        square();
+        run();
+    };
+
     document.onkeydown = function(event) {
         switch (event.code) {
             case 'ArrowRight':
