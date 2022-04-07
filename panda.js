@@ -4,7 +4,7 @@ window.onload = function() {
     let scoreField = document.querySelector('.score-field');
     let color = [1, 2, 3, 4, 5]; // массив с количеством игровых цветных шариков
     let timer;
-    let score = 0;
+    let score = 5;
     let flag; //проверка когда запускать следующий блок( функция run) с новым шариком
 
     //размечаем и заполняем  массив игрового поля по осям x , y
@@ -131,7 +131,7 @@ window.onload = function() {
         }
     }
 
-    //функция завершения игры
+    //функция завершения игры finish()
 
     function finish() {
         let stop = false;
@@ -152,8 +152,37 @@ window.onload = function() {
             }
             if (stop) break;
         }
+        if (stop) createForm();
         return stop;
     }
+
+    //функция создания формы для вывода лучших результатов
+
+    function createForm() {
+        let form = document.createElement('form');
+        form.setAttribute('method', 'POST');
+        form.setAttribute('action', 'send.php');
+        let hiddenInpun = document.createElement('input');
+        hiddenInpun.setAttribute('type', 'hidden');
+        hiddenInpun.setAttribute('name', 'score');
+        hiddenInpun.setAttribute('value', score);
+        let nameInpun = document.createElement('input');
+        nameInpun.setAttribute('type', 'text');
+        nameInpun.setAttribute('name', 'username');
+        let submitInpun = document.createElement('input');
+        submitInpun.setAttribute('type', 'submit');
+        submitInpun.setAttribute('value', 'Поделиться!');
+        form.appendChild(hiddenInpun);
+        form.appendChild(nameInpun);
+        form.appendChild(submitInpun);
+        document.querySelector('.form').appendChild(form);
+        // form.onsubmit = removeForm;
+    }
+
+    //   function removeForm() {
+    //       let form = document.querySelector('.form form');
+    //       document.querySelector('.form').removeChild(form);
+    //    }
 
     document.querySelector('.start').onclick = function() {
         init();
